@@ -45,6 +45,8 @@ export const handler = async (
     }
 
     // In a real application, this would save to a database
+    // Note: Math.random() is used for demo purposes only
+    // For production, use UUID library (e.g., uuid.v4()) or database-generated IDs
     const newItem = {
       id: Math.random().toString(36).substring(7),
       ...requestBody,
