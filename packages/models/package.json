@@ -1,0 +1,22 @@
+{
+  "name": "@repo/models",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint . --ext .ts",
+    "create-table": "env-cmd -f .env.production tsx src/scripts/create-table.ts",
+    "create-table-dev": "env-cmd -f .env.development.local tsx src/scripts/create-table.ts"
+  },
+  "dependencies": {
+    "@repo/dynamodb-manager": "*"
+  },
+  "devDependencies": {
+    "env-cmd": "^11.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5"
+  }
+}
