@@ -1,0 +1,46 @@
+service: my-flea-market-api
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  memorySize: 256
+  timeout: 30
+  environment:
+    STAGE: ${self:provider.stage}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+          Resource: '*'
+
+functions:
+  getItems:
+    handler: dist/handlers/getItems.handler
+    events:
+      - http:
+          path: /items
+          method: get
+          cors: true
+  
+  createItem:
+    handler: dist/handlers/createItem.handler
+    events:
+      - http:
+          path: /items
+          method: post
+          cors: true
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 3001

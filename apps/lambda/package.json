@@ -1,0 +1,23 @@
+{
+  "name": "lambda",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint . --ext .ts",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.130"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "eslint": "^8",
+    "rimraf": "^5.0.5",
+    "serverless-offline": "^13.3.0",
+    "typescript": "^5"
+  }
+}
