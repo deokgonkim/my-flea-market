@@ -1,4 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { Item } from '@repo/models';
 
 /**
  * Sample Lambda handler for getting items
@@ -10,7 +11,7 @@ export const handler = async (
 
   try {
     // Sample data - in a real application, this would come from a database
-    const items = [
+    const items: Item[] = [
       {
         id: '1',
         name: 'Vintage Camera',

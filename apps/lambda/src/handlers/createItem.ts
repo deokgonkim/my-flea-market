@@ -1,10 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-
-interface CreateItemRequest {
-  name: string;
-  price: number;
-  description: string;
-}
+import { Item } from '@repo/models';
 
 /**
  * Sample Lambda handler for creating a new item
@@ -28,7 +23,7 @@ export const handler = async (
       };
     }
 
-    const requestBody: CreateItemRequest = JSON.parse(event.body);
+    const requestBody: Omit<Item, 'id'> = JSON.parse(event.body);
 
     // Validate required fields
     if (!requestBody.name || !requestBody.price || !requestBody.description) {
@@ -47,7 +42,7 @@ export const handler = async (
     // In a real application, this would save to a database
     // Note: Math.random() is used for demo purposes only
     // For production, use UUID library (e.g., uuid.v4()) or database-generated IDs
-    const newItem = {
+    const newItem: Item = {
       id: Math.random().toString(36).substring(7),
       ...requestBody,
       createdAt: new Date().toISOString(),

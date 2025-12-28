@@ -1,24 +1,22 @@
 {
-  "name": "lambda",
+  "name": "@repo/dynamodb-manager",
   "version": "0.0.0",
   "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "lint": "eslint . --ext .ts",
-    "clean": "rimraf dist"
-  },
-  "dependencies": {
-    "@types/aws-lambda": "^8.10.130",
-    "@repo/models": "*"
+    "lint": "eslint . --ext .ts"
   },
   "devDependencies": {
-    "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
     "eslint": "^8",
-    "rimraf": "^5.0.5",
-    "serverless-offline": "^13.3.0",
     "typescript": "^5"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.470.0",
+    "@aws-sdk/lib-dynamodb": "^3.470.0"
   }
 }
