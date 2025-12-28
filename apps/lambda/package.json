@@ -9,7 +9,8 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@types/aws-lambda": "^8.10.130"
+    "@types/aws-lambda": "^8.10.130",
+    "@repo/models": "*"
   },
   "devDependencies": {
     "@types/node": "^20",
