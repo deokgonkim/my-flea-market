@@ -1,0 +1,4 @@
+body {
+    all: unset; /* Reset all inherited styles */
+    background-color: tomato;
+}

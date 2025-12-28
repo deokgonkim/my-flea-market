@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
@@ -8,7 +10,7 @@ export default function Home() {
         <p className="text-center text-lg mb-8">
           A modern marketplace built with Next.js and TypeScript
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <div className="p-6 border rounded-lg">
             <h2 className="text-2xl font-semibold mb-2">Frontend 🎨</h2>
             <p className="text-sm">
@@ -21,6 +23,11 @@ export default function Home() {
               Powered by TypeScript Lambda functions for serverless, scalable API endpoints.
             </p>
           </div>
+        </div>
+        <div className="text-center mt-8">
+          <Link href="/item/example-item" className="text-blue-500 hover:underline text-xl">
+            View an Example Item Page
+          </Link>
         </div>
       </div>
     </main>
