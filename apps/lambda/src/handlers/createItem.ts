@@ -39,8 +39,5 @@ export const handler = wrapHandler(async (event: APIGatewayProxyEvent) => {
 
   const newItem = await itemService.createItem(requestBody);
 
-  return {
-    message: 'Item created successfully',
-    item: newItem,
-  };
+  return newItem;
 });

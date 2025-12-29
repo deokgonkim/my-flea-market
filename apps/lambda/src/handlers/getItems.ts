@@ -10,9 +10,6 @@ export const handler = wrapHandler(
   async (event: APIGatewayProxyEvent) => {
     const items = await itemService.getItems();
 
-    return {
-      message: 'Successfully retrieved items',
-      items,
-    };
+    return items;
   }
 );

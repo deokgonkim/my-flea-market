@@ -14,9 +14,6 @@ export const handler = wrapHandler(async (event: APIGatewayProxyEvent) => {
     throw new NotFoundError(`Item '${slug}' not found`);
   }
 
-  return {
-    message: `Successfully retrieved item ${slug}`,
-    item,
-  };
+  return item;
 });
 
