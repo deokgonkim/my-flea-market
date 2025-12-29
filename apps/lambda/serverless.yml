@@ -2,7 +2,7 @@ service: my-flea-market-api
 
 frameworkVersion: '3'
 plugins:
-  - serverless-plugin-typescript
+  - serverless-esbuild
   - serverless-offline
 custom:
   serverless-offline:
@@ -54,8 +54,10 @@ provider:
             - dynamodb:PutItem
             - dynamodb:GetItem
             - dynamodb:Scan
+            - dynamodb:Query
+            - dynamodb:UpdateItem
           Resource:
-            - arn:aws:dynamodb:${self:provider.region}:*:table/${env:DYNAMODB_PREFIX}-items-${self:provider.stage}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${env:DYNAMODB_PREFIX}*
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
