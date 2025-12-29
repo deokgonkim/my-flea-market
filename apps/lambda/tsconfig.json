@@ -15,9 +15,10 @@
     "declarationMap": true,
     "sourceMap": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false, /* Allow unused parameters for lambda handlers */
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "experimentalDecorators": true, /* allow class-validator decorators */
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

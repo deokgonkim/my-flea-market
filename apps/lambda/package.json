@@ -4,21 +4,25 @@
   "private": true,
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch",
+    "dev": "nodemon -e ts,yml --exec sls offline",
     "lint": "eslint . --ext .ts",
     "clean": "rimraf dist"
   },
   "dependencies": {
+    "@repo/models": "*",
     "@types/aws-lambda": "^8.10.130",
-    "@repo/models": "*"
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.3"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
     "eslint": "^8",
+    "nodemon": "^3.1.11",
     "rimraf": "^5.0.5",
     "serverless-offline": "^13.3.0",
+    "serverless-plugin-typescript": "^2.1.5",
     "typescript": "^5"
   }
 }
