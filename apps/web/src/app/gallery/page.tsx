@@ -162,14 +162,14 @@ export default async function GalleryPage({ searchParams }: GalleryPageProps) {
               <div className="flex flex-1 flex-col gap-4 p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h2 className="text-lg font-semibold">{item.title}</h2>
+                    <h2 className="text-lg font-semibold">{item.name}</h2>
                   </div>
                   <div className="text-right text-sm font-semibold">
                     {item.price}
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {item.tags.map((tag) => (
+                  {item.tags?.map((tag) => (
                     <span
                       key={tag}
                       className="rounded-full border border-border bg-muted px-3 py-1 text-xs text-muted-foreground"
