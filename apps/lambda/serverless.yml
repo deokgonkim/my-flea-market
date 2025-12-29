@@ -1,16 +1,45 @@
 service: my-flea-market-api
 
 frameworkVersion: '3'
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+custom:
+  serverless-offline:
+    httpPort: 3001
+
+useDotenv: true
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs22.x
   stage: ${opt:stage, 'dev'}
-  region: ${opt:region, 'us-east-1'}
-  memorySize: 256
+  region: ${opt:region, 'ap-northeast-2'}
+  # memorySize: 256
   timeout: 30
-  environment:
-    STAGE: ${self:provider.stage}
+  deploymentBucket:
+    # Name of an existing bucket to use (default: created by serverless)
+    name: ${env:DEPLOYMENT_BUCKET}
+    # On deployment, serverless prunes artifacts older than this limit (default: 5)
+    maxPreviousDeploymentArtifacts: 5
+    # Prevents public access via ACLs or bucket policies (default: false)
+    # Note: the deployment bucket is not public by default. These are additional ACLs.
+    blockPublicAccess: true
+    # Skip the creation of a default bucket policy when the deployment bucket is created (default: false)
+    # skipPolicySetup: true
+    # Enable bucket versioning (default: false)
+    # versioning: true
+    # Server-side encryption method
+    serverSideEncryption: AES256
+    # For server-side encryption
+    # sseKMSKeyId: arn:aws:kms:us-east-1:xxxxxxxxxxxx:key/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+    # For server-side encryption with custom keys
+    # sseCustomerAlgorithim: AES256
+    # sseCustomerKey: string
+    # sseCustomerKeyMD5: md5sum
+  tracing:
+    lambda: true
+    apiGateway: true
   iam:
     role:
       statements:
@@ -20,10 +49,23 @@ provider:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource: '*'
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:Scan
+            - dynamodb:Query
+            - dynamodb:UpdateItem
+          Resource:
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${env:DYNAMODB_PREFIX}*
+  environment:
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    DYNAMODB_PREFIX: ${env:DYNAMODB_PREFIX}
 
 functions:
   getItems:
-    handler: dist/handlers/getItems.handler
+    handler: src/handlers/getItems.handler
     events:
       - http:
           path: /items
@@ -31,16 +73,33 @@ functions:
           cors: true
   
   createItem:
-    handler: dist/handlers/createItem.handler
+    handler: src/handlers/createItem.handler
     events:
       - http:
           path: /items
           method: post
           cors: true
 
-plugins:
-  - serverless-offline
+  getItem:
+    handler: src/handlers/getItem.handler
+    events:
+      - http:
+          path: /items/{slug}
+          method: get
+          cors: true
 
-custom:
-  serverless-offline:
-    httpPort: 3001
+  updateItem:
+    handler: src/handlers/updateItem.handler
+    events:
+      - http:
+          path: /items/{slug}
+          method: patch
+          cors: true
+
+  deleteItem:
+    handler: src/handlers/deleteItem.handler
+    events:
+      - http:
+          path: /items/{slug}
+          method: delete
+          cors: true

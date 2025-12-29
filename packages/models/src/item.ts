@@ -18,6 +18,7 @@ export interface Item {
 
   category?: string;
   condition?: ItemCondition;
+  imageUrl?: string;
 
   price: number;
   description: string;
