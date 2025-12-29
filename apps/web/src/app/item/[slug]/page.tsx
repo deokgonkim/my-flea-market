@@ -25,7 +25,7 @@ export default async function ItemPage({ params }: ItemPageProps) {
     return (
       <div className="container mx-auto p-4">
         <h1 className="text-3xl font-bold mb-4">Item Not Found</h1>
-        <p className="text-xl">The item with slug "{params.slug}" does not exist.</p>
+        <p className="text-xl">The item with slug &quot;{params.slug}&quot; does not exist.</p>
       </div>
     );
   }
