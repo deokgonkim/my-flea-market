@@ -15,13 +15,16 @@ export interface Item {
   id: string;
   slug: string;
   name: string;
+  status: ItemStatus;
 
   category?: string;
   condition?: ItemCondition;
   imageUrl?: string;
 
+  tags?: string[];
+
   price: number;
-  description: string;
+  description?: string;
   createdAt?: string;
 
   purchasedAt?: string;

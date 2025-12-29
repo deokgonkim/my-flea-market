@@ -1,4 +1,5 @@
 import { Item } from '@repo/models';
+import { apiUrl } from '../../../lib/constants';
 import './page.css';
 
 interface ItemPageProps {
@@ -6,8 +7,6 @@ interface ItemPageProps {
     slug: string;
   };
 }
-
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export default async function ItemPage({ params }: ItemPageProps) {
   if (apiUrl === undefined) {
