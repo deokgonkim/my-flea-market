@@ -3,7 +3,7 @@ name: Deploy lambda-dev
 on:
   push:
     branches:
-      - main
+      # - main # for production deployment
       - 'feat/*'
 
 env:
@@ -46,6 +46,15 @@ jobs:
 
       - name: testing env
         run: echo ACCOUNT_ID=${{ env.ACCOUNT_ID }}; echo "BOOM"
+
+      - name: Build packages
+        run: |
+          for package in packages/*; do
+            echo "Building $package"
+            cd $package
+            npm run build
+            cd ../..
+          done
 
       - name: "Deploying to stage: dev"
         uses: "./.github/actions/sls-deploy"
