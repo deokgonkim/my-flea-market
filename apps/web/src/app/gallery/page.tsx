@@ -151,7 +151,7 @@ export default async function GalleryPage({ searchParams }: GalleryPageProps) {
                 <span
                   className={cn(
                     'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase',
-                    statuses[item.status] ?? 'bg-muted text-muted-foreground'
+                    statuses[item?.status ?? "listed"] ?? 'bg-muted text-muted-foreground'
                   )}
                 >
                   {item.status}
