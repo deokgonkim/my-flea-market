@@ -1,1 +1,4 @@
 .build
+
+# for production environment testing
+env.prod.sh
