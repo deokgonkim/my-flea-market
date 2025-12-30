@@ -5,6 +5,7 @@
 - CI/CD is run on Github Actions
 - Github Actions preparation
   - Environment secrets to be configured
+    - AWS_REGION
     - AWS_ACCESS_KEY_ID
     - AWS_SECRET_ACCESS_KEY
     - DEPLOYMENT_BUCKET
