@@ -1,0 +1,57 @@
+name: Deploy lambda-dev
+
+on:
+  push:
+    branches:
+      - main
+      - feat/*
+
+env:
+  GITHUB_ENV: Preview
+  APP_ID: my-flea-market-api
+
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  DEPLOYMENT_BUCKET: ${{ secrets.DEPLOYMENT_BUCKET }}
+
+  DYNAMODB_PREFIX: ${{ variables.DYNAMODB_PREFIX }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ env.GITHUB_ENV }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Pre-build
+        run: npm ci
+
+      # not yet completely prepared `testable` code
+      # - name: Run tests
+      #   run: npm run test
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        # with:
+        #   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        #   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        #   aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: set env
+        run: |
+          export ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account);
+          echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
+
+      - name: testing env
+        run: echo ACCOUNT_ID=${{ env.ACCOUNT_ID }}; echo "BOOM"
+
+      - name: "Deploying to stage: dev"
+        uses: "./.github/actions/sls-deploy"
+        with:
+          service-folder: apps/lambda
+          aws-account-id: ${{ env.ACCOUNT_ID }}
+          app-id: ${{ env.APP_ID }}
+          stage: dev
+          deploy-script: "deploy-dev"
