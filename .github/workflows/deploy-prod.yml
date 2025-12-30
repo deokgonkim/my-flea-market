@@ -55,7 +55,7 @@ jobs:
             cd ../..
           done
 
-      - name: "Deploying to stage: dev"
+      - name: "Deploying to stage: prod"
         uses: "./.github/actions/sls-deploy"
         with:
           service-folder: apps/lambda
