@@ -28,6 +28,10 @@ export class CreateItemDto implements Omit<Item, 'id'> {
   @IsOptional()
   @IsString()
   productUrl?: string | undefined;
+
+  @IsOptional()
+  @IsString({ each: true })
+  tags?: string[] | undefined;
 }
 
 /**

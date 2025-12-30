@@ -30,6 +30,10 @@ export class UpdateItemDto implements Partial<Omit<Item, 'id'>> {
   @IsOptional()
   @IsString()
   productUrl?: string;
+
+  @IsOptional()
+  @IsString({ each: true })
+  tags?: string[] | undefined;
 }
 
 export const handler = wrapHandler(async (event: APIGatewayProxyEvent) => {

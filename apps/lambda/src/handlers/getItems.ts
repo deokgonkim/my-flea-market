@@ -21,7 +21,7 @@ export const handler = wrapHandler(
       return {
         ...e,
         status: e.status ?? randomStatus(),
-        tags: ['no tag']
+        tags: e.tags ?? ['no tag']
       }
     })
   }

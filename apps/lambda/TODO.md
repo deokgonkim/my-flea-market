@@ -1,7 +1,7 @@
 # TODO
 
 - [] Implement `status`
-- [] Implement `tags`
+- [x] Implement `tags`
 - [] Implement pagination for List APIs
 
 ## Unclear
