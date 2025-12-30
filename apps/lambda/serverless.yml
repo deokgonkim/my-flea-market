@@ -41,6 +41,7 @@ provider:
     lambda: true
     apiGateway: true
   iam:
+    deploymentRole: "arn:aws:iam::${aws:accountId}:role/my-flea-market-api-role-CloudFormationExecutionRole"
     role:
       statements:
         - Effect: Allow

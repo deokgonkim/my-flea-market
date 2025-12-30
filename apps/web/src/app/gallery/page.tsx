@@ -75,13 +75,13 @@ const coverClasses = [
   'from-stone-200 via-stone-100 to-white',
 ]
 
-interface HomePageProps {
+interface GalleryPageProps {
   searchParams: {
     [key: string]: string | string[];
   };
 }
 
-export default async function HomePage({ searchParams }: HomePageProps) {
+export default async function GalleryPage({ searchParams }: GalleryPageProps) {
 
   // get query params from url
   const debug = searchParams['debug'];
@@ -100,16 +100,36 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     <div className="mx-auto w-full max-w-6xl px-6 py-10">
       <header className="flex flex-col gap-3 pb-8">
         <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
-          My Flea Market
+          Inventory Gallery
         </p>
         <h1 className="text-3xl font-semibold sm:text-4xl">
-          My Flea Market Inventory
+          Notion-style gallery view
         </h1>
         <p className="max-w-2xl text-sm text-muted-foreground">
           A visual inventory for your flea market listings. Each card shows a
-          cover preview, status, tags, and creation time.
+          cover preview, status, tags, and last edited time.
         </p>
       </header>
+
+      <section className="flex flex-col gap-3 pb-8 md:flex-row md:items-center md:justify-between">
+        <div className="flex w-full flex-1 items-center gap-3 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground shadow-sm">
+          <span className="rounded-full bg-muted px-2 py-0.5 text-xs uppercase tracking-wide text-muted-foreground">
+            Search
+          </span>
+          <span>Try &quot;camera&quot; or &quot;lamp&quot;...</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <span className="rounded-full border border-border bg-card px-3 py-1 text-foreground">
+            Gallery
+          </span>
+          <span className="rounded-full border border-border bg-card px-3 py-1">
+            Board
+          </span>
+          <span className="rounded-full border border-border bg-card px-3 py-1">
+            List
+          </span>
+        </div>
+      </section>
 
       <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (

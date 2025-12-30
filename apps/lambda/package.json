@@ -6,7 +6,9 @@
     "build": "tsc",
     "dev": "nodemon -e ts,yml --exec sls offline",
     "lint": "eslint . --ext .ts",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "deploy-dev": "sls deploy --stage dev",
+    "deploy-prod": "sls deploy --stage prod"
   },
   "dependencies": {
     "@repo/models": "*",
