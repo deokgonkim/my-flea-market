@@ -22,7 +22,7 @@ runs:
   using: 'composite'
   steps:
     - name: 'Deploy: ${{ inputs.service-folder }} [${{ inputs.stage }}]'
-      working-directory: ${{ inputs.service-folder }}
+      working-directory: .
       shell: bash
       run: |
         CREDS=`aws sts assume-role --role-arn arn:aws:iam::${{ inputs.aws-account-id }}:role/${{ inputs.app-id }}-role-DeployerRole --role-session-name=gha_deployer`
@@ -31,4 +31,5 @@ runs:
         export AWS_SESSION_TOKEN=`echo $CREDS | jq -r '.Credentials.SessionToken'`
         export STAGE=${{inputs.stage}}
         export SLS_DEBUG="*"
+        cd ${{ inputs.service-folder }}
         npm run ${{ inputs.deploy-script }}
