@@ -4,15 +4,15 @@ on:
   push:
     branches:
       - main
-      - feat/*
+      - 'feat/*''
 
 env:
-  GITHUB_ENV: Preview
   APP_ID: my-flea-market-api
 
   AWS_REGION: ${{ secrets.AWS_REGION }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  # should be configured in configure-aws-credentials step
+  # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   DEPLOYMENT_BUCKET: ${{ secrets.DEPLOYMENT_BUCKET }}
 
   DYNAMODB_PREFIX: ${{ vars.DYNAMODB_PREFIX }}
@@ -20,10 +20,10 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ env.GITHUB_ENV }}
+    environment: Preview
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
       - name: Pre-build
         run: npm ci
@@ -33,11 +33,11 @@ jobs:
       #   run: npm run test
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        # with:
-        #   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        #   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        #   aws-region: ${{ secrets.AWS_REGION }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: set env
         run: |
