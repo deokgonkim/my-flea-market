@@ -15,7 +15,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   DEPLOYMENT_BUCKET: ${{ secrets.DEPLOYMENT_BUCKET }}
 
-  DYNAMODB_PREFIX: ${{ variables.DYNAMODB_PREFIX }}
+  DYNAMODB_PREFIX: ${{ vars.DYNAMODB_PREFIX }}
 
 jobs:
   deploy:
