@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { Item } from '@repo/models';
+import { Item, ItemCondition, ItemStatus } from '@repo/models';
 import { BadRequestError, NotFoundError, validateRequestBody, wrapHandler } from "./base-handler";
 import { itemService } from '../services/item-service';
 
@@ -17,6 +17,19 @@ export class UpdateItemDto implements Partial<Omit<Item, 'id'>> {
   @IsOptional()
   @IsString()
   slug?: string;
+
+  @IsOptional()
+  @IsString()
+  condition?: ItemCondition | undefined;
+  @IsOptional()
+  @IsString()
+  status?: ItemStatus | undefined;
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+  @IsOptional()
+  @IsString()
+  productUrl?: string;
 }
 
 export const handler = wrapHandler(async (event: APIGatewayProxyEvent) => {

@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { Item } from '@repo/models';
+import { Item, ItemCondition, ItemStatus } from '@repo/models';
 import { itemService } from '../services/item-service';
 import { validateRequestBody, wrapHandler } from './base-handler';
 
@@ -15,6 +15,19 @@ export class CreateItemDto implements Omit<Item, 'id'> {
   description!: string;
   @IsNumber()
   price!: number;
+  @IsOptional()
+  @IsString()
+  condition?: ItemCondition | undefined;
+
+  @IsOptional()
+  @IsString()
+  status?: ItemStatus | undefined;
+  @IsOptional()
+  @IsString()
+  imageUrl?: string | undefined;
+  @IsOptional()
+  @IsString()
+  productUrl?: string | undefined;
 }
 
 /**

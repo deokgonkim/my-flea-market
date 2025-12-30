@@ -15,7 +15,7 @@ export interface Item {
   id: string;
   slug: string;
   name: string;
-  status: ItemStatus;
+  status?: ItemStatus;
 
   category?: string;
   condition?: ItemCondition;
