@@ -1,6 +1,7 @@
 import { Item, ItemStatus } from '@repo/models';
 import { apiUrl } from '@/lib/constants';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 const sampleItems: Item[] = [
   {
@@ -96,47 +97,44 @@ export default async function GalleryPage({ searchParams }: GalleryPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto w-full max-w-6xl px-6 py-10">
-        <header className="flex flex-col gap-3 pb-8">
-          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
-            Inventory Gallery
-          </p>
-          <h1 className="text-3xl font-semibold sm:text-4xl">
-            Notion-style gallery view
-          </h1>
-          <p className="max-w-2xl text-sm text-muted-foreground">
-            A visual inventory for your flea market listings. Each card shows a
-            cover preview, status, tags, and last edited time.
-          </p>
-        </header>
+    <div className="mx-auto w-full max-w-6xl px-6 py-10">
+      <header className="flex flex-col gap-3 pb-8">
+        <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
+          Inventory Gallery
+        </p>
+        <h1 className="text-3xl font-semibold sm:text-4xl">
+          Notion-style gallery view
+        </h1>
+        <p className="max-w-2xl text-sm text-muted-foreground">
+          A visual inventory for your flea market listings. Each card shows a
+          cover preview, status, tags, and last edited time.
+        </p>
+      </header>
 
-        <section className="flex flex-col gap-3 pb-8 md:flex-row md:items-center md:justify-between">
-          <div className="flex w-full flex-1 items-center gap-3 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground shadow-sm">
-            <span className="rounded-full bg-muted px-2 py-0.5 text-xs uppercase tracking-wide text-muted-foreground">
-              Search
-            </span>
-            <span>Try &quot;camera&quot; or &quot;lamp&quot;...</span>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            <span className="rounded-full border border-border bg-card px-3 py-1 text-foreground">
-              Gallery
-            </span>
-            <span className="rounded-full border border-border bg-card px-3 py-1">
-              Board
-            </span>
-            <span className="rounded-full border border-border bg-card px-3 py-1">
-              List
-            </span>
-          </div>
-        </section>
+      <section className="flex flex-col gap-3 pb-8 md:flex-row md:items-center md:justify-between">
+        <div className="flex w-full flex-1 items-center gap-3 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground shadow-sm">
+          <span className="rounded-full bg-muted px-2 py-0.5 text-xs uppercase tracking-wide text-muted-foreground">
+            Search
+          </span>
+          <span>Try &quot;camera&quot; or &quot;lamp&quot;...</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <span className="rounded-full border border-border bg-card px-3 py-1 text-foreground">
+            Gallery
+          </span>
+          <span className="rounded-full border border-border bg-card px-3 py-1">
+            Board
+          </span>
+          <span className="rounded-full border border-border bg-card px-3 py-1">
+            List
+          </span>
+        </div>
+      </section>
 
-        <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((item) => (
-            <article
-              key={item.id}
-              className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-            >
+      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map((item) => (
+          <Link key={item.id} href={`/item/${item.slug}`} className="block">
+            <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
               <div
                 className={cn(
                   'relative flex aspect-[4/3] items-end bg-gradient-to-br p-4',
@@ -186,9 +184,9 @@ export default async function GalleryPage({ searchParams }: GalleryPageProps) {
                 </div>
               </div>
             </article>
-          ))}
-        </section>
-      </div>
-    </main>
+          </Link>
+        ))}
+      </section>
+    </div>
   )
 }
