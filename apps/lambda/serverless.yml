@@ -120,3 +120,11 @@ functions:
           path: /items/{slug}/like
           method: post
           cors: true
+
+  unlikeItem:
+    handler: src/handlers/unlikeItem.handler
+    events:
+      - http:
+          path: /items/{slug}/unlike
+          method: post
+          cors: true
