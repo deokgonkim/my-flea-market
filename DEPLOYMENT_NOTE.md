@@ -22,4 +22,3 @@
 ## GIT comment
 
 - `[ci skip]` commit message will prevent triggering in github actions
-- `[vercel skip]` commit message will prevent triggering in vercel deployment
