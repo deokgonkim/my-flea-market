@@ -158,9 +158,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 </div>
                 <div className="mt-auto flex items-center justify-between text-xs text-muted-foreground">
                   <span>{item.createdAt}</span>
-                  <span className="rounded-full border border-border px-2 py-0.5 text-[11px] uppercase">
-                    For sale
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span>{item.likes ?? 0} likes</span>
+                    <span className="rounded-full border border-border px-2 py-0.5 text-[11px] uppercase">
+                      For sale
+                    </span>
+                  </div>
                 </div>
               </div>
             </article>
