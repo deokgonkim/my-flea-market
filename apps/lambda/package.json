@@ -7,6 +7,7 @@
     "dev": "nodemon -e ts,yml --exec sls offline",
     "lint": "eslint . --ext .ts",
     "clean": "rimraf dist",
+    "test": "env-cmd -f .env.dev vitest run",
     "deploy-dev": "sls deploy --stage dev",
     "deploy-prod": "sls deploy --stage prod"
   },
@@ -14,10 +15,12 @@
     "@repo/models": "*",
     "@types/aws-lambda": "^8.10.130",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.3"
+    "class-validator": "^0.14.3",
+    "node-telegram-bot-api": "^0.67.0"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/node-telegram-bot-api": "^0.64.13",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
     "eslint": "^8",
@@ -25,6 +28,7 @@
     "rimraf": "^5.0.5",
     "serverless-esbuild": "^1.57.0",
     "serverless-offline": "^13.3.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^1.6.0"
   }
 }

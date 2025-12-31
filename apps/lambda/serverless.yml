@@ -5,6 +5,13 @@ plugins:
   - serverless-esbuild
   - serverless-offline
 custom:
+  esbuild:
+    bundle: true
+    platform: node
+    target: node22
+    sourcemap: true          # 핵심
+    sourcesContent: true     # 추천(WSL/컨테이너/상대경로 꼬임 방지)
+    keepNames: true          # 선택(스택트레이스 가독성)
   serverless-offline:
     httpPort: 3001
 
@@ -63,6 +70,7 @@ provider:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
     DYNAMODB_PREFIX: ${env:DYNAMODB_PREFIX}
+    TELEGRAM_BOT_TOKEN: ${env:TELEGRAM_BOT_TOKEN}
 
 functions:
   getItems:
@@ -103,4 +111,12 @@ functions:
       - http:
           path: /items/{slug}
           method: delete
+          cors: true
+
+  likeItem:
+    handler: src/handlers/likeItem.handler
+    events:
+      - http:
+          path: /items/{slug}/like
+          method: post
           cors: true
