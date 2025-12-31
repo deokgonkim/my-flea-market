@@ -8,6 +8,14 @@ export class TelegramService {
   constructor() {
     this.bot = new TelegramBot(token, {
       polling: false,
+      /* customize agent to force IPv4, to avoid issues in Local environment */
+      /* normally, `request` option is not needed */
+      request: {
+        url: 'https://api.telegram.org',
+        agentOptions: {
+          family: 4,
+        }
+      }
     });
   }
 
