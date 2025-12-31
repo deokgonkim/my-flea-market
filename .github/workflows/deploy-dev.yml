@@ -49,12 +49,7 @@ jobs:
 
       - name: Build packages
         run: |
-          for package in packages/*; do
-            echo "Building $package"
-            cd $package
-            npm run build
-            cd ../..
-          done
+          npx trubo run build --filter=@repo/*
 
       - name: "Deploying to stage: dev"
         uses: "./.github/actions/sls-deploy"
