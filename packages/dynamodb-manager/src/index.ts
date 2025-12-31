@@ -111,4 +111,13 @@ export class DynamoDBManager {
       throw error;
     }
   }
+
+  async tableExists(tableName: string): Promise<boolean> {
+    try {
+      const table = await this.describeTable(tableName);
+      return table?.TableStatus === TableStatus.ACTIVE;
+    } catch {
+      return false;
+    }
+  }
 }

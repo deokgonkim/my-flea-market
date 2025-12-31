@@ -143,6 +143,34 @@ export class ItemService {
     })
     await this.docClient.send(command);
   }
+
+  async likeItem(id: string): Promise<Item | null> {
+    const command = new UpdateCommand({
+      TableName: DYNAMODB_TABLES.ITEMS,
+      Key: { id },
+      UpdateExpression: 'SET likes = if_not_exists(likes, :start) + :inc',
+      ExpressionAttributeValues: {
+        ':inc': 1,
+        ':start': 0,
+      },
+    });
+    await this.docClient.send(command);
+    return this.getItem(id);
+  }
+
+  async unlikeItem(id: string): Promise<Item | null> {
+    const command = new UpdateCommand({
+      TableName: DYNAMODB_TABLES.ITEMS,
+      Key: { id },
+      UpdateExpression: 'SET likes = if_not_exists(likes, :start) + :inc',
+      ExpressionAttributeValues: {
+        ':inc': -1,
+        ':start': 0,
+      },
+    });
+    await this.docClient.send(command);
+    return this.getItem(id);
+  }
 }
 
 export const itemService = new ItemService(region);

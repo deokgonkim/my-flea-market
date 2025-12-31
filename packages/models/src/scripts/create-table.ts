@@ -1,44 +1,35 @@
 
 import { DynamoDBManager } from '@repo/dynamodb-manager';
 import { DYNAMODB_TABLES } from '../constants/dynamodb-tables';
+import { ItemTableDefinition } from './module/item';
+import { TelegramUserTableDefinition } from './module/telegram';
 
 const region = process.env.AWS_REGION || 'region-not-set';
 
 const manager = new DynamoDBManager(region);
 
-const keySchema = [{ AttributeName: 'id', KeyType: 'HASH' }];
-const attributeDefinitions = [
-  { AttributeName: 'id', AttributeType: 'S' },
-  { AttributeName: 'slug', AttributeType: 'S' },
-  { AttributeName: 'createdAt', AttributeType: 'S' },
-];
-
-const globalSecondaryIndexes = [
-  {
-    IndexName: 'slug-index',
-    KeySchema: [{ AttributeName: 'slug', KeyType: 'HASH' }],
-    Projection: {
-      ProjectionType: 'ALL',
-    },
-  },
-  {
-    IndexName: 'createdAt-index',
-    KeySchema: [{ AttributeName: 'createdAt', KeyType: 'HASH' }],
-    Projection: {
-      ProjectionType: 'ALL',
-    },
-  },
-];
-
 async function createTable() {
-  await manager.createTable(
-    DYNAMODB_TABLES.ITEMS,
-    keySchema,
-    attributeDefinitions,
-    'PAY_PER_REQUEST', // Use On-Demand billing
-    undefined, // No provisioned throughput needed
-    globalSecondaryIndexes
-  );
+  if (!await manager.tableExists(DYNAMODB_TABLES.ITEMS)) {
+    await manager.createTable(
+      DYNAMODB_TABLES.ITEMS,
+      ItemTableDefinition.keySchema,
+      ItemTableDefinition.attributeDefinitions,
+      ItemTableDefinition.billingMode,
+      ItemTableDefinition.provisionedThroughput,
+      ItemTableDefinition.globalSecondaryIndexes
+    );
+  }
+
+  if (!await manager.tableExists(DYNAMODB_TABLES.TELEGRAM_USER)) {
+    await manager.createTable(
+      DYNAMODB_TABLES.TELEGRAM_USER,
+      TelegramUserTableDefinition.keySchema,
+      TelegramUserTableDefinition.attributeDefinitions,
+      TelegramUserTableDefinition.billingMode,
+      TelegramUserTableDefinition.provisionedThroughput,
+      TelegramUserTableDefinition.globalSecondaryIndexes
+    );
+  }
   console.log('Table creation script finished.');
 }
 

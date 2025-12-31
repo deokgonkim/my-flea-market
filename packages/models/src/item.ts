@@ -31,4 +31,6 @@ export interface Item {
   purchasedPrice?: number;
 
   productUrl?: string;
+
+  likes?: number;
 }

@@ -21,5 +21,5 @@
     "experimentalDecorators": true, /* allow class-validator decorators */
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/**/__tests__/**"]
 }

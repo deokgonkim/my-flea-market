@@ -13,6 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { apiUrl } from '../../../lib/constants';
 import { Fraunces, Manrope } from 'next/font/google';
 import Link from 'next/link';
+import { LikeButton } from './like-button';
 
 const titleFont = Fraunces({ subsets: ['latin'], weight: ['400', '600'] });
 const bodyFont = Manrope({ subsets: ['latin'], weight: ['400', '500', '600'] });
@@ -105,11 +106,14 @@ export default async function ItemPage({ params }: ItemPageProps) {
             <Badge variant={statusVariant} className="mb-4 uppercase tracking-[0.2em]">
               {formatLabel(item.status)}
             </Badge>
-            <h1
-              className={`${titleFont.className} text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl`}
-            >
-              {item.name}
-            </h1>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <h1
+                className={`${titleFont.className} text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl`}
+              >
+                {item.name}
+              </h1>
+              <LikeButton slug={item.slug} initialLikes={item.likes ?? 0} />
+            </div>
             <p className="mt-4 text-base leading-relaxed text-slate-600">
               {item.description ?? 'This listing is waiting for a full description.'}
             </p>
