@@ -2,10 +2,10 @@
 
 source env.sh
 
-export APP_ID=my-flea-market-api
+export APP_ID=my-flea-market
 # DEPLOYMENT_BUCKET should be defined in env.sh
 #export DEPLOYMENT_BUCKET=
-export STACK_NAME=my-flea-market-api-role
+export STACK_NAME=my-flea-market-role
 
 aws cloudformation \
 deploy \

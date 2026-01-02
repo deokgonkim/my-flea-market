@@ -7,7 +7,7 @@ on:
       - 'feat/*'
 
 env:
-  APP_ID: my-flea-market-api
+  APP_ID: my-flea-market
 
   AWS_REGION: ${{ secrets.AWS_REGION }}
   # should be configured in configure-aws-credentials step
@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Pre-build
         run: npm ci
@@ -48,15 +50,29 @@ jobs:
       - name: testing env
         run: echo ACCOUNT_ID=${{ env.ACCOUNT_ID }}; echo "BOOM"
 
-      - name: Build packages
+      - name: Run deploy-dev
+        env:
+          BASE_SHA: ${{ github.event.before }}
         run: |
-          npx turbo run build --filter=@repo/*
+          CREDS=`aws sts assume-role --role-arn arn:aws:iam::${{ env.ACCOUNT_ID }}:role/${{ env.APP_ID }}-role-DeployerRole --role-session-name=gha_deployer`
+          export AWS_ACCESS_KEY_ID=`echo $CREDS | jq -r '.Credentials.AccessKeyId'`
+          export AWS_SECRET_ACCESS_KEY=`echo $CREDS | jq -r '.Credentials.SecretAccessKey'`
+          export AWS_SESSION_TOKEN=`echo $CREDS | jq -r '.Credentials.SessionToken'`
+          export STAGE=dev
+          export SLS_DEBUG="*"
+          if [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            echo "Base SHA is all zeros, running full deploy"
+            npx turbo run deploy-dev
+          else
+            echo "Base SHA is $BASE_SHA, running affected deploy"
+            npx turbo run deploy-dev --filter=...[$BASE_SHA]
+          fi
 
-      - name: "Deploying to stage: dev"
-        uses: "./.github/actions/sls-deploy"
-        with:
-          service-folder: apps/lambda
-          aws-account-id: ${{ env.ACCOUNT_ID }}
-          app-id: ${{ env.APP_ID }}
-          stage: dev
-          deploy-script: "deploy-dev"
+      # - name: "Deploying to stage: dev"
+      #   uses: "./.github/actions/sls-deploy"
+      #   with:
+      #     service-folder: apps/lambda
+      #     aws-account-id: ${{ env.ACCOUNT_ID }}
+      #     app-id: ${{ env.APP_ID }}
+      #     stage: dev
+      #     deploy-script: "deploy-dev"

@@ -6,6 +6,14 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
+    "deploy-dev": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "deploy-prod": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
     "lint": {
       "dependsOn": ["^lint"]
     },
