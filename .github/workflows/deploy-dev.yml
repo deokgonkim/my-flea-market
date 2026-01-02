@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Pre-build
         run: npm ci
@@ -52,11 +54,23 @@ jobs:
         run: |
           npx turbo run build --filter=@repo/*
 
-      - name: "Deploying to stage: dev"
-        uses: "./.github/actions/sls-deploy"
-        with:
-          service-folder: apps/lambda
-          aws-account-id: ${{ env.ACCOUNT_ID }}
-          app-id: ${{ env.APP_ID }}
-          stage: dev
-          deploy-script: "deploy-dev"
+      - name: Run deploy-dev
+        env:
+          BASE_SHA: ${{ github.event.before }}
+        run: |
+          CREDS=`aws sts assume-role --role-arn arn:aws:iam::${{ env.ACCOUNT_ID }}:role/${{ env.APP_ID }}-role-DeployerRole --role-session-name=gha_deployer`
+          export AWS_ACCESS_KEY_ID=`echo $CREDS | jq -r '.Credentials.AccessKeyId'`
+          export AWS_SECRET_ACCESS_KEY=`echo $CREDS | jq -r '.Credentials.SecretAccessKey'`
+          export AWS_SESSION_TOKEN=`echo $CREDS | jq -r '.Credentials.SessionToken'`
+          export STAGE=dev
+          export SLS_DEBUG="*"
+          npx turbo run deploy-dev --filter=...[$BASE_SHA]
+
+      # - name: "Deploying to stage: dev"
+      #   uses: "./.github/actions/sls-deploy"
+      #   with:
+      #     service-folder: apps/lambda
+      #     aws-account-id: ${{ env.ACCOUNT_ID }}
+      #     app-id: ${{ env.APP_ID }}
+      #     stage: dev
+      #     deploy-script: "deploy-dev"
