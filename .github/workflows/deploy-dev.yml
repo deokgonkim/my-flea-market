@@ -7,7 +7,7 @@ on:
       - 'feat/*'
 
 env:
-  APP_ID: my-flea-market-api
+  APP_ID: my-flea-market
 
   AWS_REGION: ${{ secrets.AWS_REGION }}
   # should be configured in configure-aws-credentials step
