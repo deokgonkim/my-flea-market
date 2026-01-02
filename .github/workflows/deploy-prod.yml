@@ -47,15 +47,20 @@ jobs:
       - name: testing env
         run: echo ACCOUNT_ID=${{ env.ACCOUNT_ID }}; echo "BOOM"
 
-      - name: Build packages
+      - name: Run deploy-prod
+        env:
+          BASE_SHA: ${{ github.event.before }}
         run: |
-          npx turbo run build --filter=@repo/*
-
-      - name: "Deploying to stage: prod"
-        uses: "./.github/actions/sls-deploy"
-        with:
-          service-folder: apps/lambda
-          aws-account-id: ${{ env.ACCOUNT_ID }}
-          app-id: ${{ env.APP_ID }}
-          stage: prod
-          deploy-script: "deploy-prod"
+          CREDS=`aws sts assume-role --role-arn arn:aws:iam::${{ env.ACCOUNT_ID }}:role/${{ env.APP_ID }}-role-DeployerRole --role-session-name=gha_deployer`
+          export AWS_ACCESS_KEY_ID=`echo $CREDS | jq -r '.Credentials.AccessKeyId'`
+          export AWS_SECRET_ACCESS_KEY=`echo $CREDS | jq -r '.Credentials.SecretAccessKey'`
+          export AWS_SESSION_TOKEN=`echo $CREDS | jq -r '.Credentials.SessionToken'`
+          export STAGE=prod
+          export SLS_DEBUG="*"
+          if [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            echo "Base SHA is all zeros, running full deploy"
+            npx turbo run deploy-prod
+          else
+            echo "Base SHA is $BASE_SHA, running affected deploy"
+            npx turbo run deploy-prod --filter=...[$BASE_SHA]
+          fi

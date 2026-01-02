@@ -60,7 +60,13 @@ jobs:
           export AWS_SESSION_TOKEN=`echo $CREDS | jq -r '.Credentials.SessionToken'`
           export STAGE=dev
           export SLS_DEBUG="*"
-          npx turbo run deploy-dev --filter=...[$BASE_SHA]
+          if [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            echo "Base SHA is all zeros, running full deploy"
+            npx turbo run deploy-dev
+          else
+            echo "Base SHA is $BASE_SHA, running affected deploy"
+            npx turbo run deploy-dev --filter=...[$BASE_SHA]
+          fi
 
       # - name: "Deploying to stage: dev"
       #   uses: "./.github/actions/sls-deploy"
