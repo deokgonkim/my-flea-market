@@ -50,10 +50,6 @@ jobs:
       - name: testing env
         run: echo ACCOUNT_ID=${{ env.ACCOUNT_ID }}; echo "BOOM"
 
-      - name: Build packages
-        run: |
-          npx turbo run build --filter=@repo/*
-
       - name: Run deploy-dev
         env:
           BASE_SHA: ${{ github.event.before }}
