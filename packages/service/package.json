@@ -1,0 +1,23 @@
+{
+  "name": "@repo/service",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rimraf dist",
+    "lint": "eslint . --ext .ts",
+    "test": "env-cmd -f .env.development.local vitest run"
+  },
+  "dependencies": {
+    "@repo/dynamodb-manager": "*",
+    "@repo/models": "*"
+  },
+  "devDependencies": {
+    "env-cmd": "^11.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5"
+  }
+}

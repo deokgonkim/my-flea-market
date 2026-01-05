@@ -4,15 +4,15 @@ import { validate } from 'class-validator';
 import { ValidationError } from 'class-validator';
 
 export class BadRequestError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor(message: string, { cause }: { cause?: Error } = {}) {
+    super(message, { cause });
     this.name = 'BadRequestError';
   }
 }
 
 export class NotFoundError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor(message: string, { cause }: { cause?: Error } = {}) {
+    super(message, { cause });
     this.name = 'NotFoundError';
   }
 }

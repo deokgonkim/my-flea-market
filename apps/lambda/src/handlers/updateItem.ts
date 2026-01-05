@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent } from 'aws-lambda';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { Item, ItemCondition, ItemStatus } from '@repo/models';
 import { BadRequestError, NotFoundError, validateRequestBody, wrapHandler } from "./base-handler";
-import { itemService } from '../services/item-service';
+import { itemService } from '@repo/service';
 
 export class UpdateItemDto implements Partial<Omit<Item, 'id'>> {
   @IsOptional()
@@ -49,7 +49,10 @@ export const handler = wrapHandler(async (event: APIGatewayProxyEvent) => {
 
   const requestBody: Partial<Item> = await validateRequestBody(event.body, UpdateItemDto);
   
-  const newItem = await itemService.updateItem(item.id, requestBody);
+  const newItem = await itemService.updateItem(item.id, requestBody).catch((err) => {
+    console.error('Error updating item:', err);
+    throw new BadRequestError('Failed to update item', { cause: err });
+  });
 
   return newItem;
 });

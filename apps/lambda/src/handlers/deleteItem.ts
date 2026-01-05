@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { NotFoundError, wrapHandler } from "./base-handler";
-import { itemService } from '../services/item-service';
+import { itemService } from '@repo/service';
 
 export const handler = wrapHandler(async (event: APIGatewayProxyEvent) => {
 

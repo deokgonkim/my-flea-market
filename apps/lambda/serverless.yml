@@ -129,3 +129,51 @@ functions:
           path: /items/{slug}/unlike
           method: post
           cors: true
+
+resources:
+  Resources:
+    ItemTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:DYNAMODB_PREFIX}-items
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: slug
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: slug-index
+            KeySchema:
+              - AttributeName: slug
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: createdAt-index
+            KeySchema:
+              - AttributeName: createdAt
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+  Outputs:
+    ItemTableArn:
+      Value:
+        Fn::GetAtt:
+          - ItemTable
+          - Arn
+      Export:
+        Name: ${env:DYNAMODB_PREFIX}-items-ItemTableArn
+    ItemTableStreamArn:
+      Value:
+        Fn::GetAtt:
+          - ItemTable
+          - StreamArn
+      Export:
+        Name: ${env:DYNAMODB_PREFIX}-items-ItemTableStreamArn

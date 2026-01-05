@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { itemService } from '../services/item-service';
+import { itemService } from '@repo/service';
 import { wrapHandler } from './base-handler';
 import { ItemStatus } from '@repo/models';
 

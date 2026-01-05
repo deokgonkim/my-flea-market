@@ -11,7 +11,6 @@ import {
 } from '@aws-sdk/lib-dynamodb';
 import { Item, DYNAMODB_TABLES } from '@repo/models';
 import { randomUUID } from 'crypto';
-import { BadRequestError } from '../handlers/base-handler';
 
 const region = process.env.AWS_REGION || 'region-not-set';
 
@@ -75,10 +74,16 @@ export class ItemService {
     return null;
   }
 
+  /**
+   * Create a new item
+   * @param itemData 
+   * @returns 
+   * @throws Error if slug is not unique
+   */
   async createItem(itemData: Omit<Item, 'id'>): Promise<Item> {
     const isSlugTaken = await this.checkSlugUniqueness(itemData.slug);
     if (isSlugTaken) {
-      throw new BadRequestError(`Slug "${itemData.slug}" already exists.`);
+      throw new Error(`Slug "${itemData.slug}" already exists.`);
     }
 
     const newItem: Item = {
@@ -94,6 +99,13 @@ export class ItemService {
     return newItem;
   }
 
+  /**
+   * Update an existing item
+   * @param id 
+   * @param item 
+   * @returns 
+   * @throws Error if slug is not unique
+   */
   async updateItem(id: string, item: Partial<Item>): Promise<Item> {
     const newAttributes: Partial<Item> = { ...item };
     const updateExpressions: string[] = [];
@@ -117,7 +129,7 @@ export class ItemService {
     if (item.slug) {
       const isSlugTaken = await this.checkSlugUniqueness(item.slug);
       if (isSlugTaken) {
-        throw new BadRequestError(`Slug "${item.slug}" already exists.`);
+        throw new Error(`Slug "${item.slug}" already exists.`);
       }
     }
     await this.docClient.send(command);

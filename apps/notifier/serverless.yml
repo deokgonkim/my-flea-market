@@ -65,14 +65,73 @@ provider:
             - dynamodb:Scan
             - dynamodb:Query
             - dynamodb:UpdateItem
+            - dynamodb:DescribeStream
+            - dynamodb:GetRecords
+            - dynamodb:GetShardIterator
+            - dynamodb:ListStreams
           Resource:
             - arn:aws:dynamodb:${self:provider.region}:*:table/${env:DYNAMODB_PREFIX}*
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${env:DYNAMODB_PREFIX}*/stream/*
+        - Effect: Allow
+          Action:
+            - sns:Publish
+          Resource:
+            - Ref: NotifierSNSTopic
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
     DYNAMODB_PREFIX: ${env:DYNAMODB_PREFIX}
     TELEGRAM_BOT_TOKEN: ${env:TELEGRAM_BOT_TOKEN}
 
+    SNS_TOPIC_ARN:
+      Ref: NotifierSNSTopic
+
 functions:
   noop:
     handler: src/handlers/noop.handler
+
+  # capture updates from dynamodb stream
+  processDynamoDBStream:
+    handler: src/handlers/processDynamoDBStream.handler
+    events:
+      - stream:
+          type: dynamodb
+          arn: # get arn from other serverless service
+            Fn::ImportValue: ${env:DYNAMODB_PREFIX}-items-ItemTableStreamArn
+          batchSize: 5
+          startingPosition: LATEST
+
+  notifier:
+    handler: src/handlers/notifier.handler
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - NotifierSQSQueue
+              - Arn
+          batchSize: 5
+
+resources:
+  Resources:
+    # SNS Topic to receive notifications
+    NotifierSNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: my-flea-market-${self:provider.stage}-items-notifier-topic
+    # SQS Queue to receive messages from SNS
+    NotifierSQSQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: my-flea-market-${self:provider.stage}-items-notifier-queue
+        VisibilityTimeout: 60
+
+    NotifierSQSSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn:
+          Ref: NotifierSNSTopic
+        Protocol: sqs
+        Endpoint:
+          Fn::GetAtt:
+            - NotifierSQSQueue
+            - Arn
