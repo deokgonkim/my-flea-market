@@ -82,6 +82,7 @@ provider:
     REGION: ${self:provider.region}
     DYNAMODB_PREFIX: ${env:DYNAMODB_PREFIX}
     TELEGRAM_BOT_TOKEN: ${env:TELEGRAM_BOT_TOKEN}
+    WEB_BASE_URL: ${env:WEB_BASE_URL}
 
     SNS_TOPIC_ARN:
       Ref: NotifierSNSTopic

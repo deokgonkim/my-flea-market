@@ -19,8 +19,14 @@ export class TelegramService {
     });
   }
 
-  public async sendMessage(chatId: number, text: string) {
-    return this.bot.sendMessage(chatId, text);
+  public escapeMarkdownV2(text: string): string {
+    return String(text).replace(/([_*[\]()~`>#+-=|{}.!])/g, '\\$1');
+  }
+
+  public async sendMessage(chatId: number, text: string, escape: boolean = true) {
+    return this.bot.sendMessage(chatId, escape ? this.escapeMarkdownV2(text) : text, {
+      parse_mode: 'MarkdownV2',
+    });
   }
 }
 

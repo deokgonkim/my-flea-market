@@ -16,6 +16,7 @@ env:
 
   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
   DYNAMODB_PREFIX: ${{ vars.DYNAMODB_PREFIX }}
+  WEB_BASE_URL: ${{ vars.WEB_BASE_URL }}
 
 jobs:
   deploy:
