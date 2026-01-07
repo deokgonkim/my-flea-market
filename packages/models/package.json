@@ -14,7 +14,8 @@
     "restore": "tsx src/scripts/restore.ts"
   },
   "dependencies": {
-    "@repo/dynamodb-manager": "*"
+    "@repo/dynamodb-manager": "*",
+    "@repo/telegram": "*"
   },
   "devDependencies": {
     "env-cmd": "^11.0.0",
