@@ -14,6 +14,7 @@ import { apiUrl } from '../../../lib/constants';
 import { Fraunces, Manrope } from 'next/font/google';
 import Link from 'next/link';
 import { LikeButton } from './like-button';
+import { SubscribeButton } from './subscribe-button';
 
 const titleFont = Fraunces({ subsets: ['latin'], weight: ['400', '600'] });
 const bodyFont = Manrope({ subsets: ['latin'], weight: ['400', '500', '600'] });
@@ -171,7 +172,7 @@ export default async function ItemPage({ params }: ItemPageProps) {
               </p>
             </CardContent>
             <CardFooter className="flex flex-col gap-3">
-              <Button className="w-full">Message seller</Button>
+              <SubscribeButton slug={ item.slug }>Subscribe for Item Update</SubscribeButton>
               <Button variant="outline" className="w-full">Save for later</Button>
             </CardFooter>
           </Card>

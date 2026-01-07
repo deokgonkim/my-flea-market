@@ -39,9 +39,10 @@ export const handler = async (event: any) => {
 
     const updatedColumns = findUpdateAttributes(parsedMessage);
 
-    let message = 'An item has been added.';
+    let message = 'An item has been added';
+    let item: Item | null = null;
     if (Object.keys(updatedColumns).length > 0) {
-      const item: Item | null = await itemService.getItem(parsedMessage.dynamodb.Keys.id.S);
+      item = await itemService.getItem(parsedMessage.dynamodb.Keys.id.S);
       message = notificationMessageTemplate({
         WEB_BASE_URL: process.env.WEB_BASE_URL || 'http://localhost:3000',
         name: telegramService.escapeMarkdownV2(item?.name || 'Unknown'),
@@ -53,6 +54,19 @@ export const handler = async (event: any) => {
     const adminUsers = await telegramUserService.getAdminUsers();
     for (const user of adminUsers) {
       await telegramService.sendMessage(user.telegramUserId, message, false);
+    }
+    if (item) {
+      for (const subscriber of item.subscribers || []) {
+        if (subscriber.type === 'telegram' && subscriber.telegramUserId) {
+          console.log(`Sending notification to subscriber ${subscriber.telegramUserId}`);
+          // await telegramService.sendMessage(subscriber.telegramUserId, message, false);
+          await telegramService.sendReply(subscriber.telegramUserId, message, {
+            inline_keyboard: [
+              [{ text: "Unsubscribe", callback_data: `unsubscribe,${item.slug}` }],
+            ],
+          });
+        }
+      }
     }
     console.log('Received message:', message);
   }

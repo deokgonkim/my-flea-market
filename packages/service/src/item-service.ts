@@ -9,7 +9,7 @@ import {
   GetCommand,
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
-import { Item, DYNAMODB_TABLES } from '@repo/models';
+import { Item, DYNAMODB_TABLES, ItemSubscription } from '@repo/models';
 import { randomUUID } from 'crypto';
 
 const region = process.env.AWS_REGION || 'region-not-set';
@@ -182,6 +182,43 @@ export class ItemService {
     });
     await this.docClient.send(command);
     return this.getItem(id);
+  }
+
+  async subscribeItem(slug: string, subscriber: ItemSubscription): Promise<void> {
+    const existingItem = await this.getItemBySlug(slug);
+    if (!existingItem) {
+      throw new Error(`Item with slug "${slug}" does not exist.`);
+    }
+    if (existingItem.subscribers?.length > 0) {
+      const existingSubscriberIndex = existingItem.subscribers.findIndex(
+        (sub) => sub.telegramUserId === subscriber.telegramUserId
+      );
+      if (existingSubscriberIndex !== -1) {
+        existingItem.subscribers[existingSubscriberIndex] = subscriber;
+        await this.updateItem(existingItem.id, { subscribers: existingItem.subscribers });
+        return;
+      }
+      existingItem.subscribers.push(subscriber);
+      await this.updateItem(existingItem.id, { subscribers: existingItem.subscribers });
+      return;
+    } else {
+      existingItem.subscribers = [subscriber];
+      await this.updateItem(existingItem.id, { subscribers: existingItem.subscribers });
+      return;
+    }
+  }
+
+  async unsubscribeItem(slug: string, subscriber: ItemSubscription): Promise<void> {
+    const existingItem = await this.getItemBySlug(slug);
+    if (!existingItem) {
+      throw new Error(`Item with slug "${slug}" does not exist.`);
+    }
+    if (existingItem.subscribers?.length > 0) {
+      const updatedSubscribers = existingItem.subscribers.filter(
+        (sub) => sub.telegramUserId !== subscriber.telegramUserId
+      );
+      await this.updateItem(existingItem.id, { subscribers: updatedSubscribers });
+    }
   }
 }
 

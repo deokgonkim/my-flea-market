@@ -11,6 +11,14 @@ export enum ItemStatus {
   Reserved = 'reserved',
 }
 
+export interface ItemSubscription {
+  type: 'telegram'|'whatsapp',
+  telegramUserId?: number,
+  telegramUsername?: string,
+  whatsappUserId?: string,
+  whatsappProfileName?: string,
+}
+
 export interface Item {
   id: string;
   slug: string;
@@ -33,4 +41,6 @@ export interface Item {
   productUrl?: string;
 
   likes?: number;
+
+  subscribers?: ItemSubscription[];
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { TelegramUser } from '@repo/models';
+import { MyTelegramUser } from '@repo/models';
 import { TelegramUserService } from '../telegram-user-service';
 
 const region = process.env.AWS_REGION || 'region-not-set';
@@ -15,7 +15,7 @@ describe('TelegramUserService', () => {
 
     expect(result).toBeDefined();
     expect(Array.isArray(result)).toBe(true);
-    result.forEach((user: TelegramUser) => {
+    result.forEach((user: MyTelegramUser) => {
       console.log('Admin User:', user);
       expect(user).toHaveProperty('telegramUserId');
       expect(Object.keys(user).length).toBe(1); // Only telegramUserId should be present

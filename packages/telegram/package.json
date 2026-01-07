@@ -8,7 +8,10 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "lint": "eslint . --ext .ts",
-    "test": "env-cmd -f .env.development.local vitest run"
+    "test": "env-cmd -f .env.development.local vitest run",
+    "get-webhook-dev": "env-cmd -f .env.development.local tsx ./src/scripts/get-webhook.ts",
+    "set-webhook-dev": "env-cmd -f .env.development.local tsx ./src/scripts/set-webhook.ts",
+    "remove-webhook-dev": "env-cmd -f .env.development.local tsx ./src/scripts/remove-webhook.ts"
   },
   "dependencies": {
     "node-telegram-bot-api": "^0.67.0"

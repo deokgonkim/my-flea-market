@@ -130,6 +130,14 @@ functions:
           method: post
           cors: true
 
+  telegramWebhook:
+    handler: src/handlers/telegram-webhook.handler
+    events:
+      - http:
+          path: /telegram/webhook
+          method: post
+          cors: true
+
 resources:
   Resources:
     ItemTable:
@@ -162,6 +170,34 @@ resources:
               ProjectionType: ALL
         StreamSpecification:
           StreamViewType: NEW_AND_OLD_IMAGES
+    TelegramWebhookTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:DYNAMODB_PREFIX}-telegram-webhooks
+        AttributeDefinitions:
+          - AttributeName: updateId
+            AttributeType: N
+          - AttributeName: fromId
+            AttributeType: N
+          - AttributeName: fromUsername
+            AttributeType: S
+        KeySchema:
+          - AttributeName: updateId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: fromId-index
+            KeySchema:
+              - AttributeName: fromId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: fromUsername-index
+            KeySchema:
+              - AttributeName: fromUsername
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
   Outputs:
     ItemTableArn:
       Value:

@@ -24,8 +24,37 @@ export class TelegramService {
   }
 
   public async sendMessage(chatId: number, text: string, escape: boolean = true) {
-    return this.bot.sendMessage(chatId, escape ? this.escapeMarkdownV2(text) : text, {
+    const escapedMessage = escape ? this.escapeMarkdownV2(text) : text;
+    return this.bot.sendMessage(chatId, escapedMessage, {
       parse_mode: 'MarkdownV2',
+    }).catch((error) => {
+      console.error('Error sending Telegram message:', error);
+      console.log('Failed message:', text);
+      console.log('escaped message:', escapedMessage);
+      throw error;
+    });
+  }
+
+  public async sendReply(chatId: number, text: string, reply_markup: any) {
+    return this.bot.sendMessage(chatId, text, {
+      parse_mode: 'MarkdownV2',
+      reply_markup,
+    }).catch((error) => {
+      console.error('Error sending Telegram reply message:', error);
+      console.log('Failed message:', text);
+      throw error;
+    });
+  }
+
+  public async answerCallbackQuery(callbackQueryId: string, text: string, showAlert: boolean = false) {
+    return this.bot.answerCallbackQuery(callbackQueryId, {
+      text,
+      show_alert: showAlert,
+    }).catch((error) => {
+      console.error('Error answering Telegram callback query:', error);
+      console.log('Callback Query ID:', callbackQueryId);
+      console.log('Answer text:', text);
+      throw error;
     });
   }
 }

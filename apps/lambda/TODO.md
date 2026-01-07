@@ -1,5 +1,6 @@
 # TODO
 
+- [] Capture error in `alwaysSuccessHandler` (src/handlers/base-handler.ts)
 - [] Implement `status`
 - [x] Implement `tags`
 - [] Implement pagination for List APIs
