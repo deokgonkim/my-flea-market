@@ -136,3 +136,23 @@ resources:
           Fn::GetAtt:
             - NotifierSQSQueue
             - Arn
+
+    NotifierSQSQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        Queues:
+          - Ref: NotifierSQSQueue
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal: "*"
+              Action: "SQS:SendMessage"
+              Resource:
+                Fn::GetAtt:
+                  - NotifierSQSQueue
+                  - Arn
+              Condition:
+                ArnEquals:
+                  aws:SourceArn:
+                    Ref: NotifierSNSTopic
