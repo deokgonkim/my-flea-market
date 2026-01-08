@@ -2,6 +2,7 @@ import { telegramService } from "@repo/telegram";
 import { itemService, telegramUserService } from "@repo/service";
 import { DDBStreamMessage, findUpdateAttributes } from "../streamParser";
 import { Item } from "@repo/models";
+import { wrapper } from "./aws-xray-capture";
 
 const createTemplate = (strings: TemplateStringsArray, ...keys: any[]) => {
   return (args: { [key: string]: any }) => {
@@ -28,7 +29,7 @@ const formatUpdatedAttributes = (updatedColumns: { [key: string]: { oldValue: an
 
 }
 
-export const handler = async (event: any) => {
+export const handler = wrapper(async function notifier(event: any) {
   console.log('Notifier handler received event:', event);
 
   for (const record of event.Records) {
@@ -71,7 +72,5 @@ export const handler = async (event: any) => {
     console.log('Received message:', message);
   }
 
-  return {
-    message: 'No operation performed.',
-  };
-};
+  return;
+});

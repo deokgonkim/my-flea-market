@@ -1,4 +1,5 @@
 import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
+import { wrapper } from './aws-xray-capture';
 
 const region = process.env.AWS_REGION || 'ap-northeast-2';
 
@@ -11,7 +12,7 @@ const sendSnsMessage = async (message: string) => {
   }));
 }
 
-export const handler = async (event: any) => {
+export const handler = wrapper(async function processDynamoDBStream(event: any) {
   console.log('ProcessDynamoDBStream handler received event:', JSON.stringify(event, null, 2));
 
   for (const record of event.Records) {
@@ -19,8 +20,4 @@ export const handler = async (event: any) => {
 
     await sendSnsMessage(JSON.stringify(record, null, 2));
   }
-
-  return {
-    message: 'DynamoDB stream processed.',
-  };
-};
+});
