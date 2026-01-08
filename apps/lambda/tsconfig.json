@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2022",
     "module": "commonjs",
-    "lib": ["ES2020"],
+    "lib": ["ES2022"],
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
@@ -19,7 +19,17 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true, /* allow class-validator decorators */
+    "paths": {
+      "@repo/models": ["../../packages/models/src/index.ts"],
+      "@repo/service": ["../../packages/service/src/index.ts"],
+      "@repo/telegram": ["../../packages/telegram/src/index.ts"]
+    }
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/**/__tests__/**"]
+  "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/**/__tests__/**"],
+  "references": [
+    { "path": "../../packages/models" },
+    { "path": "../../packages/service" },
+    { "path": "../../packages/telegram" }
+  ]
 }

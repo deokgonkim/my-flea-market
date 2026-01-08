@@ -5,7 +5,7 @@ import {
   DynamoDBDocumentClient,
   ScanCommand,
 } from '@aws-sdk/lib-dynamodb';
-import { DYNAMODB_TABLES, TelegramUser } from "@repo/models";
+import { DYNAMODB_TABLES, MyTelegramUser } from "@repo/models";
 
 const region = process.env.AWS_REGION || 'region-not-set';
 
@@ -17,9 +17,9 @@ export class TelegramUserService {
     this.docClient = DynamoDBDocumentClient.from(client);
   }
 
-  public async getAdminUsers(): Promise<TelegramUser[]> {
+  public async getAdminUsers(): Promise<MyTelegramUser[]> {
     const command = new ScanCommand({
-      TableName: DYNAMODB_TABLES.TELEGRAM_USER,
+      TableName: DYNAMODB_TABLES.TELEGRAM_USERS,
       FilterExpression: 'isAdmin = :isAdmin',
       ExpressionAttributeValues: {
         ':isAdmin': true,
@@ -27,7 +27,7 @@ export class TelegramUserService {
       ProjectionExpression: 'telegramUserId',
     });
     const { Items  } = await this.docClient.send(command);
-    return Items as TelegramUser[];
+    return Items as MyTelegramUser[];
   }
 }
 

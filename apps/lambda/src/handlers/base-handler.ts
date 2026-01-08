@@ -4,15 +4,15 @@ import { validate } from 'class-validator';
 import { ValidationError } from 'class-validator';
 
 export class BadRequestError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor(message: string, { cause }: { cause?: Error } = {}) {
+    super(message, { cause });
     this.name = 'BadRequestError';
   }
 }
 
 export class NotFoundError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor(message: string, { cause }: { cause?: Error } = {}) {
+    super(message, { cause });
     this.name = 'NotFoundError';
   }
 }
@@ -75,6 +75,40 @@ export function wrapHandler(fn: (event: APIGatewayProxyEvent) => Promise<any>) {
       }
       return {
         statusCode: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+        body: JSON.stringify({
+          message: 'Internal server error',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        }, null, 2),
+      };
+    }
+  }
+}
+
+export function alwaysSuccessHandler(fn: (event: APIGatewayProxyEvent) => Promise<any>) {
+  return async (event: APIGatewayProxyEvent
+  ): Promise<APIGatewayProxyResult> => {
+    console.log('Event:', JSON.stringify(event, null, 2));
+
+    try {
+      const result = await fn(event);
+      return {
+        statusCode: result.statusCode,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+        },
+        body: JSON.stringify(result, null, 2),
+      };
+    } catch (error) {
+      console.error('Error:', error);
+      return {
+        statusCode: 200,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',

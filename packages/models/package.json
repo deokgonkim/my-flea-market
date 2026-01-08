@@ -8,11 +8,12 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "lint": "eslint . --ext .ts",
-    "create-table": "env-cmd -f .env.production tsx src/scripts/create-table.ts",
-    "create-table-dev": "env-cmd -f .env.development.local tsx src/scripts/create-table.ts"
+    "backup": "tsx src/scripts/backup.ts",
+    "restore": "tsx src/scripts/restore.ts"
   },
   "dependencies": {
-    "@repo/dynamodb-manager": "*"
+    "@repo/dynamodb-manager": "*",
+    "@repo/telegram": "*"
   },
   "devDependencies": {
     "env-cmd": "^11.0.0",

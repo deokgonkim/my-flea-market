@@ -129,3 +129,115 @@ functions:
           path: /items/{slug}/unlike
           method: post
           cors: true
+
+  telegramWebhook:
+    handler: src/handlers/telegram-webhook.handler
+    events:
+      - http:
+          path: /telegram/webhook
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    ItemTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:DYNAMODB_PREFIX}-items
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: slug
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: slug-index
+            KeySchema:
+              - AttributeName: slug
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: createdAt-index
+            KeySchema:
+              - AttributeName: createdAt
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
+    TelegramUserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:DYNAMODB_PREFIX}-telegram-users
+        AttributeDefinitions:
+          - AttributeName: telegramUserId
+            AttributeType: N
+          - AttributeName: username
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: telegramUserId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: username-index
+            KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: createdAt-index
+            KeySchema:
+              - AttributeName: createdAt
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+    TelegramWebhookTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:DYNAMODB_PREFIX}-telegram-webhooks
+        AttributeDefinitions:
+          - AttributeName: updateId
+            AttributeType: N
+          - AttributeName: fromId
+            AttributeType: N
+          - AttributeName: fromUsername
+            AttributeType: S
+        KeySchema:
+          - AttributeName: updateId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: fromId-index
+            KeySchema:
+              - AttributeName: fromId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: fromUsername-index
+            KeySchema:
+              - AttributeName: fromUsername
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+  Outputs:
+    ItemTableArn:
+      Value:
+        Fn::GetAtt:
+          - ItemTable
+          - Arn
+      Export:
+        Name: ${env:DYNAMODB_PREFIX}-items-ItemTableArn
+    ItemTableStreamArn:
+      Value:
+        Fn::GetAtt:
+          - ItemTable
+          - StreamArn
+      Export:
+        Name: ${env:DYNAMODB_PREFIX}-items-ItemTableStreamArn

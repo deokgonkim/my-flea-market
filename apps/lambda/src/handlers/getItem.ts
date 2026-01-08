@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { itemService } from '../services/item-service';
+import { itemService } from '@repo/service';
 import { BadRequestError, NotFoundError, wrapHandler } from './base-handler';
 
 export const handler = wrapHandler(async (event: APIGatewayProxyEvent) => {

@@ -1,8 +1,8 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { Item, ItemCondition, ItemStatus } from '@repo/models';
-import { itemService } from '../services/item-service';
-import { validateRequestBody, wrapHandler } from './base-handler';
+import { itemService } from '@repo/service';
+import { BadRequestError, validateRequestBody, wrapHandler } from './base-handler';
 
 export class CreateItemDto implements Omit<Item, 'id'> {
   @IsString()
@@ -54,7 +54,10 @@ export const handler = wrapHandler(async (event: APIGatewayProxyEvent) => {
       .replace(/^-+|-+$/g, '');
   }
 
-  const newItem = await itemService.createItem(requestBody);
+  const newItem = await itemService.createItem(requestBody).catch((err) => {
+    console.error('Error creating item:', err);
+    throw new BadRequestError('Failed to create item', { cause: err });
+  });
 
   return newItem;
 });

@@ -1,8 +1,8 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { itemService } from '../services/item-service';
+import { itemService } from '@repo/service';
 import { BadRequestError, NotFoundError, wrapHandler } from './base-handler';
-import { telegramService } from '../external/telegram';
-import { telegramUserService } from '../services/telegram-user-service';
+// import { telegramService } from '@repo/telegram';
+// import { telegramUserService } from '@repo/service';
 
 export const handler = wrapHandler(async (event: APIGatewayProxyEvent) => {
   const slug = event.pathParameters?.slug;
@@ -18,10 +18,10 @@ export const handler = wrapHandler(async (event: APIGatewayProxyEvent) => {
   }
 
   const newItem = await itemService.unlikeItem(item.id);
-  const adminUsers = await telegramUserService.getAdminUsers();
-  for (const user of adminUsers) {
-    await telegramService.sendMessage(user.telegramUserId, `Item unliked: ${item.name} (Slug: ${item.slug})`);
-  }
+  // const adminUsers = await telegramUserService.getAdminUsers();
+  // for (const user of adminUsers) {
+  //   await telegramService.sendMessage(user.telegramUserId, `Item unliked: ${item.name} (Slug: ${item.slug})`);
+  // }
 
   return newItem;
 });
