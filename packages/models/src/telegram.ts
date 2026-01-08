@@ -37,7 +37,7 @@ export class MyTelegramUserManager {
 
   async getTelegramUser(telegramUserId: number): Promise<MyTelegramUser | null> {
     const params = {
-      TableName: DYNAMODB_TABLES.TELEGRAM_USER,
+      TableName: DYNAMODB_TABLES.TELEGRAM_USERS,
       Key: { telegramUserId },
     };
     const command = new GetCommand(params);
@@ -47,7 +47,7 @@ export class MyTelegramUserManager {
 
   async addTelegramUser(user: TelegramUser): Promise<void> {
     const params = {
-      TableName: DYNAMODB_TABLES.TELEGRAM_USER,
+      TableName: DYNAMODB_TABLES.TELEGRAM_USERS,
       Item: {
         ...user,
         telegramUserId: user.id,
@@ -63,7 +63,7 @@ export class MyTelegramUserManager {
     if (existingUser) {
       // Update existing user
       const params = {
-        TableName: DYNAMODB_TABLES.TELEGRAM_USER,
+        TableName: DYNAMODB_TABLES.TELEGRAM_USERS,
         Item: {
           ...existingUser,
           ...user,

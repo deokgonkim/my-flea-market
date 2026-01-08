@@ -19,7 +19,7 @@ export class TelegramUserService {
 
   public async getAdminUsers(): Promise<MyTelegramUser[]> {
     const command = new ScanCommand({
-      TableName: DYNAMODB_TABLES.TELEGRAM_USER,
+      TableName: DYNAMODB_TABLES.TELEGRAM_USERS,
       FilterExpression: 'isAdmin = :isAdmin',
       ExpressionAttributeValues: {
         ':isAdmin': true,
