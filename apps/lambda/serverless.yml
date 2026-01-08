@@ -176,7 +176,7 @@ resources:
         TableName: ${env:DYNAMODB_PREFIX}-telegram-users
         AttributeDefinitions:
           - AttributeName: telegramUserId
-            AttributeType: S
+            AttributeType: N
           - AttributeName: username
             AttributeType: S
           - AttributeName: createdAt
@@ -188,7 +188,7 @@ resources:
         GlobalSecondaryIndexes:
           - IndexName: username-index
             KeySchema:
-              - AttributeName: slug
+              - AttributeName: username
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
